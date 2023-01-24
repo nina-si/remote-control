@@ -2,6 +2,11 @@ import http from 'http';
 import { WebSocketServer } from 'ws';
 import { getMousePosition, updateMousePosition } from '../drawing/mouse';
 import { drawRectangle, drawSquare } from '../drawing/drawFigures';
+import {
+  DIRECTIONS,
+  DRAW_COMMANDS,
+  MOUSE_COMMANDS,
+} from '../drawing/constants';
 
 const wsServer = http.createServer();
 
@@ -18,37 +23,37 @@ wss.on('connection', function connection(ws, req) {
       const operation = command.split(' ')[0];
       let step = 0;
       switch (operation) {
-        case 'mouse_position':
-          const answer = getMousePosition();
+        case MOUSE_COMMANDS.POSITION:
+          const answer = await getMousePosition();
           ws.send(answer);
           console.log('sent: ', answer);
           break;
-        case 'mouse_up':
+        case MOUSE_COMMANDS.UP:
           step = Number(command.split(' ')[1]);
-          updateMousePosition('up', step);
+          updateMousePosition(DIRECTIONS.UP, step);
           break;
-        case 'mouse_down':
+        case MOUSE_COMMANDS.DOWN:
           step = Number(command.split(' ')[1]);
-          updateMousePosition('down', step);
+          updateMousePosition(DIRECTIONS.DOWN, step);
           break;
-        case 'mouse_right':
+        case MOUSE_COMMANDS.RIGHT:
           step = Number(command.split(' ')[1]);
-          updateMousePosition('right', step);
+          updateMousePosition(DIRECTIONS.RIGHT, step);
           break;
-        case 'mouse_left':
+        case MOUSE_COMMANDS.LEFT:
           step = Number(command.split(' ')[1]);
-          updateMousePosition('left', step);
+          updateMousePosition(DIRECTIONS.LEFT, step);
           break;
       }
     } else if (command.startsWith('draw')) {
       const operation = command.split(' ')[0];
       switch (operation) {
-        case 'draw_rectangle':
+        case DRAW_COMMANDS.RECTANGLE:
           const width = Number(command.split(' ')[1]);
           const height = Number(command.split(' ')[2]);
           await drawRectangle(width, height);
           break;
-        case 'draw_square':
+        case DRAW_COMMANDS.SQUARE:
           const side = Number(command.split(' ')[1]);
           await drawSquare(side);
           break;

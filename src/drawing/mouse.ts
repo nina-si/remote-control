@@ -1,27 +1,27 @@
-const mousePosition = {
-  x: 0,
-  y: 0,
-};
+import { mouse, right, up, down, left } from '@nut-tree/nut-js';
+import { DIRECTIONS } from './constants';
 
-export const getMousePosition = (): string => {
-  const x = mousePosition.x;
-  const y = mousePosition.y;
+export const getMousePosition = async (): Promise<string> => {
+  const { x, y } = await mouse.getPosition();
   return `mouse_position ${x},${y}`;
 };
 
-export const updateMousePosition = (direction: string, step: number): void => {
+export const updateMousePosition = async (
+  direction: string,
+  step: number
+): Promise<void> => {
   switch (direction) {
-    case 'up':
-      mousePosition.y = mousePosition.y + step;
+    case DIRECTIONS.UP:
+      await mouse.move(up(step));
       break;
-    case 'down':
-      mousePosition.y = mousePosition.y - step;
+    case DIRECTIONS.DOWN:
+      await mouse.move(down(step));
       break;
-    case 'right':
-      mousePosition.x = mousePosition.x + step;
+    case DIRECTIONS.RIGHT:
+      await mouse.move(right(step));
       break;
-    case 'left':
-      mousePosition.x = mousePosition.x - step;
+    case DIRECTIONS.LEFT:
+      await mouse.move(left(step));
       break;
   }
 };
