@@ -12,3 +12,8 @@ const WS_PORT = 8080;
 wsServer.listen(WS_PORT, () => {
   console.log(`WS Server started on the ${WS_PORT} port!`);
 });
+
+process.on('SIGINT', () => {
+  wsServer.close();
+  httpServer.close();
+});
