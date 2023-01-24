@@ -1,15 +1,14 @@
-import { mouse } from '@nut-tree/nut-js';
+import httpServer from './src/http_server/index.js';
+import wsServer from './src/ws_server/index.js';
 
 const HTTP_PORT = 8181;
 
-import { WebSocketServer } from 'ws';
-
-export const wss = new WebSocketServer({ port: HTTP_PORT });
-
-wss.on('connection', (ws) => {
-  ws.on('message', (data) => console.log(data));
-
-  ws.send('hello');
+httpServer.listen(HTTP_PORT, () => {
+  console.log(`Start static http server on the ${HTTP_PORT} port!`);
 });
 
-wss.on('close', () => console.log('closed'));
+const WS_PORT = 8080;
+
+wsServer.listen(WS_PORT, () => {
+  console.log(`WS Server started on the ${WS_PORT} port!`);
+});
