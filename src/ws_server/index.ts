@@ -52,7 +52,7 @@ wss.on('connection', function connection(ws, req) {
         case DRAW_COMMANDS.RECTANGLE:
           const width = Number(command.split(' ')[1]);
           const height = Number(command.split(' ')[2]);
-          if (width > 940 || height > 500) {
+          if (width > 1000 || height > 500) {
             ws.send(`${DRAW_COMMANDS.RECTANGLE}_error`);
             console.log(`Error: ${ERROR_MESSAGES.RECTANGLE_MSG}`);
           } else {
