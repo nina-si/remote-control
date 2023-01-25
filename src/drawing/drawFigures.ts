@@ -1,4 +1,4 @@
-import { mouse, straightTo, Button } from '@nut-tree/nut-js';
+import { mouse, straightTo, Button, Point } from '@nut-tree/nut-js';
 
 const pressLeftButton = async () => {
   await mouse.releaseButton(Button.LEFT);
@@ -26,4 +26,24 @@ export const drawRectangle = async (
 
 export const drawSquare = async (sideLength: number): Promise<void> => {
   await drawRectangle(sideLength, sideLength);
+};
+
+export const drawCircle = async (radius: number): Promise<void> => {
+  const { x, y } = await mouse.getPosition();
+  const center = { x: x - radius, y };
+
+  const points = [];
+  const pointsQuantity = 360;
+
+  for (let i = 0; i < pointsQuantity; i++) {
+    const newX =
+      Math.cos((2 * Math.PI * i) / pointsQuantity) * radius + center.x;
+    const newY =
+      Math.sin((2 * Math.PI * i) / pointsQuantity) * radius + center.y;
+    points.push(new Point(newX, newY));
+  }
+
+  await pressLeftButton();
+  await mouse.move(points);
+  await mouse.releaseButton(Button.LEFT);
 };

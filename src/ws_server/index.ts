@@ -1,7 +1,7 @@
 import http from 'http';
 import { WebSocketServer } from 'ws';
 import { getMousePosition, updateMousePosition } from '../drawing/mouse';
-import { drawRectangle, drawSquare } from '../drawing/drawFigures';
+import { drawCircle, drawRectangle, drawSquare } from '../drawing/drawFigures';
 import {
   DIRECTIONS,
   DRAW_COMMANDS,
@@ -56,6 +56,10 @@ wss.on('connection', function connection(ws, req) {
         case DRAW_COMMANDS.SQUARE:
           const side = Number(command.split(' ')[1]);
           await drawSquare(side);
+          break;
+        case DRAW_COMMANDS.CIRCLE:
+          const radius = Number(command.split(' ')[1]);
+          await drawCircle(radius);
           break;
       }
     }
