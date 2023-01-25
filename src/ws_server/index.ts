@@ -1,5 +1,5 @@
 import http from 'http';
-import { WebSocketServer } from 'ws';
+import { createWebSocketStream, WebSocketServer } from 'ws';
 import { getMousePosition, updateMousePosition } from '../drawing/mouse';
 import { drawCircle, drawRectangle, drawSquare } from '../drawing/drawFigures';
 import {
@@ -8,16 +8,22 @@ import {
   ERROR_MESSAGES,
   MOUSE_COMMANDS,
 } from '../drawing/constants';
+import { parseIp } from '../utils';
 
 const wsServer = http.createServer();
 
 const wss = new WebSocketServer({ server: wsServer });
 
 wss.on('connection', function connection(ws, req) {
-  const ip = req.socket.remoteAddress;
+  const ip = parseIp();
   console.log(`A client with ip ${ip} connected`);
 
-  ws.on('message', async function message(data) {
+  const stream = createWebSocketStream(ws, {
+    encoding: 'utf8',
+    decodeStrings: false,
+  });
+
+  stream.on('data', async function message(data) {
     console.log('received: %s', data);
     const command = data.toString().trim();
     if (command.startsWith('mouse')) {
@@ -26,8 +32,9 @@ wss.on('connection', function connection(ws, req) {
       switch (operation) {
         case MOUSE_COMMANDS.POSITION:
           const answer = await getMousePosition();
-          ws.send(answer);
-          console.log('sent: ', answer);
+          stream.write(answer, () => {
+            console.log('sent: ', answer);
+          });
           break;
         case MOUSE_COMMANDS.UP:
           step = Number(command.split(' ')[1]);
