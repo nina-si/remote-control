@@ -5,6 +5,7 @@ import { drawCircle, drawRectangle, drawSquare } from '../drawing/drawFigures';
 import {
   DIRECTIONS,
   DRAW_COMMANDS,
+  ERROR_MESSAGES,
   MOUSE_COMMANDS,
 } from '../drawing/constants';
 
@@ -51,15 +52,30 @@ wss.on('connection', function connection(ws, req) {
         case DRAW_COMMANDS.RECTANGLE:
           const width = Number(command.split(' ')[1]);
           const height = Number(command.split(' ')[2]);
-          await drawRectangle(width, height);
+          if (width > 940 || height > 500) {
+            ws.send(`${DRAW_COMMANDS.RECTANGLE}_error`);
+            console.log(`Error: ${ERROR_MESSAGES.RECTANGLE_MSG}`);
+          } else {
+            await drawRectangle(width, height);
+          }
           break;
         case DRAW_COMMANDS.SQUARE:
           const side = Number(command.split(' ')[1]);
-          await drawSquare(side);
+          if (side === 0 || side > 500) {
+            ws.send(`${DRAW_COMMANDS.SQUARE}_error`);
+            console.log(`Error: ${ERROR_MESSAGES.SQUARE_MSG}`);
+          } else {
+            await drawSquare(side);
+          }
           break;
         case DRAW_COMMANDS.CIRCLE:
           const radius = Number(command.split(' ')[1]);
-          await drawCircle(radius);
+          if (radius > 240 || radius === 0) {
+            ws.send(`${DRAW_COMMANDS.CIRCLE}_error`);
+            console.log(`Error: ${ERROR_MESSAGES.CIRCLE_MSG}`);
+          } else {
+            await drawCircle(radius);
+          }
           break;
       }
     }

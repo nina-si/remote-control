@@ -18,3 +18,10 @@ export const DRAW_COMMANDS = {
   SQUARE: 'draw_square',
   RECTANGLE: 'draw_rectangle',
 };
+
+export const ERROR_MESSAGES = {
+  CIRCLE_MSG: 'Radius is too big or too small. Please provide correct radius',
+  SQUARE_MSG:
+    'Square side length is too big or too small. Please provide correct length',
+  RECTANGLE_MSG: 'Incorrect side lengths. Please provide correct length',
+};
